@@ -55,7 +55,25 @@ module.exports = (env, argv) => {
     },
 
     // モジュール
-    module: {},
+    module: {
+      rules: [
+        {
+          test: /\.(s[ac]ss|css)$/i,
+          use: [
+            "style-loader",
+            {
+              loader: "css-loader",
+              options: {
+                // NOTE: CSS内`url()`ファイルの取り込みを行わない
+                url: false,
+                // NOTE: 開発環境でソースマップを出力する
+                sourceMap: isDevMode ? true : false
+              }
+            }
+          ]
+        }
+      ]
+    },
 
     // プラグイン
     plugins: []
