@@ -1,5 +1,7 @@
 module.exports = (env, argv) => {
     const isDevMode = argv.mode === "development" ? true : false;
+    const isStaging = !!env.STAGING;
+    const isRelease = !!env.RELEASE;
 
     return {
         mode: isDevMode ? "development" : "production",

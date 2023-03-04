@@ -6,6 +6,8 @@
   "scripts": {
     "dev": "npx webpack --mode=development",
     "build": "npx webpack --mode=production",
+    "staging": "npx webpack --mode=production --env STAGING=true",
+    "release": "npx webpack --mode=production --env RELEASE=true",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
