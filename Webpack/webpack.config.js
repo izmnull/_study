@@ -1,6 +1,8 @@
 module.exports = (env, argv) => {
+    const isDevMode = argv.mode === "development" ? true : false;
+
     return {
-        mode: "development",
+        mode: isDevMode ? "development" : "production",
         target: ["web", "es5"],
         entry: {
             common: "./src/script/common.js"
