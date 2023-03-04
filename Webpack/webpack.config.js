@@ -1,4 +1,6 @@
 const path = require("path");
+// @see https://webpack.js.org/plugins/mini-css-extract-plugin/
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 /**
  * @param {*} env 環境変数
@@ -15,6 +17,7 @@ module.exports = (env, argv) => {
   paths.dist.common = {};
   paths.dist.common.root = path.resolve(paths.dist.root, "./common");
   paths.dist.common.js = path.resolve(paths.dist.common.root, "./js");
+  paths.dist.common.css = path.resolve(paths.dist.common.root, "./css");
 
   paths.src = {};
   paths.src.root = path.resolve(__dirname, "./src");
@@ -60,7 +63,8 @@ module.exports = (env, argv) => {
         {
           test: /\.(s[ac]ss|css)$/i,
           use: [
-            "style-loader",
+            // "style-loader",
+            MiniCssExtractPlugin.loader,
             {
               loader: "css-loader",
               options: {
@@ -76,6 +80,12 @@ module.exports = (env, argv) => {
     },
 
     // プラグイン
-    plugins: []
+    plugins: [
+      new MiniCssExtractPlugin({
+        // output.path からの相対パスで記述する必要がある
+        // [name]はエントリーポイントのkey値
+        filename: path.join(path.relative(paths.dist.common.js, paths.dist.common.css), "/[name].css")
+      })
+    ]
   };
 };
