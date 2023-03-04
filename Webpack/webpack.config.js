@@ -9,7 +9,6 @@
  *
  * TODO:
  * - HTML
- *   - 複数のHTMLファイルの入出力をしたい
  *   - PUGが使用できない
  * - JS
  *   - 複数のJSファイルを出力したい
@@ -175,6 +174,18 @@ module.exports = (env, argv) => {
       new HtmlWebpackPlugin({
         filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/index.html"),
         template: path.resolve(paths.src.html, "./index.html"),
+        inject: false,
+        minify: isDevMode ? false : true
+      }),
+      new HtmlWebpackPlugin({
+        filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/sub.html"),
+        template: path.resolve(paths.src.html, "./sub.html"),
+        inject: false,
+        minify: isDevMode ? false : true
+      }),
+      new HtmlWebpackPlugin({
+        filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/directory/index.html"),
+        template: path.resolve(paths.src.html, "./directory/index.html"),
         inject: false,
         minify: isDevMode ? false : true
       })
