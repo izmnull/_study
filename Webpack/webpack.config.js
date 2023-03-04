@@ -41,6 +41,14 @@ module.exports = (env, argv) => {
       filename: "common.js"
     },
 
+    // モジュールの解決方法
+    resolve: {
+      extensions: [".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".pug"],
+      alias: {
+        "~": paths.src.root
+      }
+    },
+
     // ファイル監視オプション
     watchOptions: {
       ignored: "**/node_modules"

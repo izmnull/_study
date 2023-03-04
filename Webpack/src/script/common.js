@@ -1,3 +1,3 @@
-import { Module, ModuleText } from "./modules/Module.js";
+import { Module, ModuleText } from "~/script/modules/Module";
 
 console.log(ModuleText);
