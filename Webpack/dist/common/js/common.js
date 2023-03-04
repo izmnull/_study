@@ -1,1 +1,1 @@
-!function(){"use strict";console.log("Module Text");let o={LoooongKey:"value1"};o.LoooongKey="value2",console.log(o.LoooongKey),document.getElementById("js-insert").innerText=o.LoooongKey,o.LoooongKey="value3",document.getElementById("js-insert").innerText=o.LoooongKey}();
+!function(){"use strict";let e={LoooongKey:"value1"};e.LoooongKey="value2",document.getElementById("js-insert").innerText=e.LoooongKey,e.LoooongKey="value3",document.getElementById("js-insert").innerText=e.LoooongKey}();

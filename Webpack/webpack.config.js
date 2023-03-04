@@ -92,23 +92,23 @@ module.exports = (env, argv) => {
       ignored: "**/node_modules"
     },
 
-    // optimization: {
-    //   minimize: true,
-    //   minimizer: [
-    //     // NOTE: 圧縮するコードによっては問題が出る可能性もある
-    //     new TerserPlugin({
-    //       parallel: 4,
-    //       terserOptions: {
-    //         compress: {
-    //           drop_console: true
-    //           // NOTE: ステージング環境ではコンソールを出力する
-    //           // drop_console: isStaging ? false : true
-    //         },
-    //         mangle: true
-    //       }
-    //     })
-    //   ]
-    // },
+    optimization: {
+      minimize: true,
+      minimizer: [
+        // NOTE: 圧縮するコードによっては問題が出る可能性もある
+        new TerserPlugin({
+          parallel: 4,
+          terserOptions: {
+            compress: {
+              drop_console: true
+              // NOTE: ステージング環境ではコンソールを出力する
+              // drop_console: isStaging ? false : true
+            },
+            mangle: true
+          }
+        })
+      ]
+    },
 
     // ローカルサーバー構成
     devServer: {
