@@ -9,7 +9,6 @@
  *
  * TODO:
  * - HTML
- *   - テンプレートを用いるとHTMLの出力がminifyされない
  *   - 複数のHTMLファイルの入出力をしたい
  *   - PUGが使用できない
  * - JS
@@ -177,7 +176,7 @@ module.exports = (env, argv) => {
         filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/index.html"),
         template: path.resolve(paths.src.html, "./index.html"),
         inject: false,
-        minify: isDevMode ? true : false
+        minify: isDevMode ? false : true
       })
     ]
   };
