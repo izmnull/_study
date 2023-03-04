@@ -170,25 +170,30 @@ module.exports = (env, argv) => {
         )
       }),
 
-      // NOTE: テンプレートを用いることで、ビルド時の自動的なファイルパスの記述はできなくなったが、ルート相対パスで記述できるようになった
-      new HtmlWebpackPlugin({
-        filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/index.html"),
-        template: path.resolve(paths.src.html, "./index.html"),
-        inject: false,
-        minify: isDevMode ? false : true
-      }),
-      new HtmlWebpackPlugin({
-        filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/sub.html"),
-        template: path.resolve(paths.src.html, "./sub.html"),
-        inject: false,
-        minify: isDevMode ? false : true
-      }),
-      new HtmlWebpackPlugin({
-        filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/directory/index.html"),
-        template: path.resolve(paths.src.html, "./directory/index.html"),
-        inject: false,
-        minify: isDevMode ? false : true
-      })
+      ...(() => {
+        let htmlArray = [
+            "/index.html",
+            "/sub.html",
+            "/directory/index.html"
+        ];
+        let HtmlWebpackPluginArray = [];
+
+        for (let i = 0; i < htmlArray.length; i++) {
+          HtmlWebpackPluginArray.push(
+            new HtmlWebpackPlugin({
+              filename: path.join(
+                path.relative(paths.dist.common.js, paths.dist.root),
+                htmlArray[i]
+              ),
+              template: path.resolve(paths.src.html, "./" + htmlArray[i]),
+              inject: false,
+              minify: isDevMode ? false : true
+            })
+          );
+        }
+
+        return HtmlWebpackPluginArray;
+      })()
     ]
   };
 };
