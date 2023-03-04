@@ -1,1 +1,1 @@
-console.log("common");
+!function(){"use strict";console.log("Module Text")}();

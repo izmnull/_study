@@ -1,1 +1,3 @@
-console.log("common");
+import { Module, ModuleText } from "./modules/Module.js";
+
+console.log(ModuleText);
