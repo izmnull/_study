@@ -26,6 +26,7 @@ module.exports = (env, argv) => {
   paths.src = {};
   paths.src.root = path.resolve(__dirname, "./src");
   paths.src.script = path.resolve(paths.src.root, "./script");
+  paths.src.html = path.resolve(paths.src.root, "./html");
 
   return {
     // 構成オプション: "none" | "development" | "production"
@@ -98,16 +99,20 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         // output.path からの相対パスで記述する必要がある
         // [name]はエントリーポイントのkey値
-        // filename: path.join(
-        //   path.relative(paths.dist.common.js, paths.dist.common.css),
-        //   "/[name].css"
-        // )
-        // NOTE: HtmlWebpackPluginにより相対パスにする記述が必要になるため、下記に変更する
-        filename: "../css/[name].css"
+        filename: path.join(
+          path.relative(paths.dist.common.js, paths.dist.common.css),
+          "/[name].css"
+        )
       }),
-      // TODO: エントリーポイントからの相対パスだと出力されたHTMLの記述も相対パスになるのでルート相対パスにしたい
+
+      // NOTE: テンプレートを用いることで、ビルド時の自動的なファイルパスの記述はできなくなったが、ルート相対パスで記述できるようになった
       new HtmlWebpackPlugin({
-        filename: "../../index.html",
+        filename: path.join(
+          path.relative(paths.dist.common.js, paths.dist.root),
+          "/index.html"
+        ),
+        template: path.resolve(paths.src.html, "./index.html"),
+        inject: false,
         minify: isDevMode ? true : false
       })
     ]
