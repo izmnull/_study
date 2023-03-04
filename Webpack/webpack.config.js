@@ -1,3 +1,20 @@
+/**
+ * TODO
+ * - HTML
+ *   - テンプレートを用いるとHTMLの出力がminifyされない
+ *   - 複数のHTMLファイルの入出力をしたい
+ *   - PUGが使用できない
+ * - JS
+ *   - 複数のJSファイルを出力したい
+ *   - JSファイルの圧縮（コード短縮）がされない
+ *   - フレームワークが使用できない
+ *   - TypeScriptが使用できない
+ * - CSS
+ *   - CSSのソートができない
+ * - Webpack
+ *   - distディレクトリがクリーン化されない
+ *   - ビルドの速度が遅い
+ */
 const path = require("path");
 // @see https://www.npmjs.com/package/sass
 const DartSass = require("sass");
