@@ -1,0 +1,10 @@
+// ホームパス（~）が使用できる
+@use "~/style/component/component";
+
+body {
+  background: #fff;
+
+  a {
+    color: #00f;
+  }
+}

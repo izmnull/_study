@@ -1,4 +1,6 @@
 const path = require("path");
+// @see https://www.npmjs.com/package/sass
+const DartSass = require("sass");
 // @see https://webpack.js.org/plugins/mini-css-extract-plugin/
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
@@ -46,7 +48,7 @@ module.exports = (env, argv) => {
 
     // モジュールの解決方法
     resolve: {
-      extensions: [".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".pug"],
+      extensions: [".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".pug", ".scss"],
       alias: {
         "~": paths.src.root
       }
@@ -73,6 +75,16 @@ module.exports = (env, argv) => {
                 // NOTE: 開発環境でソースマップを出力する
                 sourceMap: isDevMode ? true : false
               }
+            },
+            {
+              loader: "sass-loader",
+              options: {
+                implementation: DartSass,
+                sourceMap: isDevMode ? true : false,
+                sassOptions: {
+                  outputStyle: isDevMode ? "expanded" : "compressed"
+                }
+              }
             }
           ]
         }
@@ -84,7 +96,10 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         // output.path からの相対パスで記述する必要がある
         // [name]はエントリーポイントのkey値
-        filename: path.join(path.relative(paths.dist.common.js, paths.dist.common.css), "/[name].css")
+        filename: path.join(
+          path.relative(paths.dist.common.js, paths.dist.common.css),
+          "/[name].css"
+        )
       })
     ]
   };
