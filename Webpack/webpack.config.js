@@ -3,6 +3,8 @@ const path = require("path");
 const DartSass = require("sass");
 // @see https://webpack.js.org/plugins/mini-css-extract-plugin/
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+// @see https://webpack.js.org/plugins/html-webpack-plugin/
+const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 /**
  * @param {*} env 環境変数
@@ -96,10 +98,17 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         // output.path からの相対パスで記述する必要がある
         // [name]はエントリーポイントのkey値
-        filename: path.join(
-          path.relative(paths.dist.common.js, paths.dist.common.css),
-          "/[name].css"
-        )
+        // filename: path.join(
+        //   path.relative(paths.dist.common.js, paths.dist.common.css),
+        //   "/[name].css"
+        // )
+        // NOTE: HtmlWebpackPluginにより相対パスにする記述が必要になるため、下記に変更する
+        filename: "../css/[name].css"
+      }),
+      // TODO: エントリーポイントからの相対パスだと出力されたHTMLの記述も相対パスになるのでルート相対パスにしたい
+      new HtmlWebpackPlugin({
+        filename: "../../index.html",
+        minify: isDevMode ? true : false
       })
     ]
   };
