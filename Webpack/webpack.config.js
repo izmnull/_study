@@ -14,6 +14,10 @@
  * - Webpack
  *   - distディレクトリがクリーン化されない
  *   - ビルドの速度が遅い
+ *   - 設定ファイルを移動したい
+ * - ASSET
+ *   - 画像などのアセットファイルが参照できない
+ *   - 画像ファイルを圧縮したい
  */
 const path = require("path");
 // @see https://www.npmjs.com/package/sass
