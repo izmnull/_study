@@ -14,7 +14,6 @@
  *   - PUGが使用できない
  * - JS
  *   - 複数のJSファイルを出力したい
- *   - JSファイルの圧縮（コード短縮）がされない
  *   - フレームワークが使用できない
  *   - TypeScriptが使用できない
  * - CSS
@@ -34,6 +33,8 @@ const DartSass = require("sass");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 // @see https://webpack.js.org/plugins/html-webpack-plugin/
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+// @see https://webpack.js.org/plugins/terser-webpack-plugin/
+const TerserPlugin = require("terser-webpack-plugin");
 
 /**
  * @param {*} env 環境変数
@@ -90,6 +91,24 @@ module.exports = (env, argv) => {
     watchOptions: {
       ignored: "**/node_modules"
     },
+
+    // optimization: {
+    //   minimize: true,
+    //   minimizer: [
+    //     // NOTE: 圧縮するコードによっては問題が出る可能性もある
+    //     new TerserPlugin({
+    //       parallel: 4,
+    //       terserOptions: {
+    //         compress: {
+    //           drop_console: true
+    //           // NOTE: ステージング環境ではコンソールを出力する
+    //           // drop_console: isStaging ? false : true
+    //         },
+    //         mangle: true
+    //       }
+    //     })
+    //   ]
+    // },
 
     // ローカルサーバー構成
     devServer: {
