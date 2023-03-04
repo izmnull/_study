@@ -62,6 +62,25 @@ module.exports = (env, argv) => {
       ignored: "**/node_modules"
     },
 
+    // ローカルサーバー構成
+    devServer: {
+      host: "local-ip", // "localhost" | "local-ip"
+      // port: "3030", // NOTE: 指定しなければ自動
+      static: {
+        directory: paths.dist.root
+      },
+      open: true,
+      liveReload: true,
+      hot: true,
+      devMiddleware: {
+        // NOTE: 静的ビルドしたファイルを参照する
+        writeToDisk: (filePath) => {
+          // NOTE: この書式によりキャッシュファイルが大量に生成されるのを停止する
+          return !/hot-update/i.test(filePath);
+        }
+      }
+    },
+
     // モジュール
     module: {
       rules: [
@@ -107,10 +126,7 @@ module.exports = (env, argv) => {
 
       // NOTE: テンプレートを用いることで、ビルド時の自動的なファイルパスの記述はできなくなったが、ルート相対パスで記述できるようになった
       new HtmlWebpackPlugin({
-        filename: path.join(
-          path.relative(paths.dist.common.js, paths.dist.root),
-          "/index.html"
-        ),
+        filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), "/index.html"),
         template: path.resolve(paths.src.html, "./index.html"),
         inject: false,
         minify: isDevMode ? true : false

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx webpack --mode=development",
+    "dev": "npx webpack serve --mode=development",
     "build": "npx webpack --mode=production",
     "staging": "npx webpack --mode=production --env STAGING=true",
     "release": "npx webpack --mode=production --env RELEASE=true",
@@ -20,6 +20,7 @@
     "sass-loader": "^13.2.0",
     "style-loader": "^3.3.1",
     "webpack": "^5.75.0",
-    "webpack-cli": "^5.0.1"
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1"
   }
 }
