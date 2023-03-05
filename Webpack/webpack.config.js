@@ -33,6 +33,8 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 // @see https://webpack.js.org/plugins/terser-webpack-plugin/
 const TerserPlugin = require("terser-webpack-plugin");
+// @see https://www.npmjs.com/package/glob
+const glob = require("glob");
 
 /**
  * @param {*} env 環境変数
@@ -171,26 +173,23 @@ module.exports = (env, argv) => {
       }),
 
       ...(() => {
-        let htmlArray = [
-            "/index.html",
-            "/sub.html",
-            "/directory/index.html"
-        ];
         let HtmlWebpackPluginArray = [];
 
-        for (let i = 0; i < htmlArray.length; i++) {
-          HtmlWebpackPluginArray.push(
-            new HtmlWebpackPlugin({
-              filename: path.join(
-                path.relative(paths.dist.common.js, paths.dist.root),
-                htmlArray[i]
-              ),
-              template: path.resolve(paths.src.html, "./" + htmlArray[i]),
-              inject: false,
-              minify: isDevMode ? false : true
-            })
-          );
-        }
+        glob
+          .globSync("**/*.html", {
+            ignore: "**/_*/*.html",
+            cwd: paths.src.html
+          })
+          .forEach((fileName) => {
+            HtmlWebpackPluginArray.push(
+              new HtmlWebpackPlugin({
+                filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), fileName),
+                template: path.resolve(paths.src.html, "./" + fileName),
+                inject: false,
+                minify: isDevMode ? false : true
+              })
+            );
+          });
 
         return HtmlWebpackPluginArray;
       })()
