@@ -8,8 +8,6 @@
  * 　脳死してないで目的毎に対応できるスキルを付けろし
  *
  * TODO:
- * - HTML
- *   - PUGが使用できない
  * - JS
  *   - 複数のJSファイルを出力したい
  *   - フレームワークが使用できない
@@ -57,6 +55,7 @@ module.exports = (env, argv) => {
   paths.src.root = path.resolve(__dirname, "./src");
   paths.src.script = path.resolve(paths.src.root, "./script");
   paths.src.html = path.resolve(paths.src.root, "./html");
+  paths.src.pug = path.resolve(paths.src.root, "./pug");
 
   return {
     // 構成オプション: "none" | "development" | "production"
@@ -157,6 +156,18 @@ module.exports = (env, argv) => {
               }
             }
           ]
+        },
+        {
+          test: /\.pug$/,
+          use: [
+            {
+              loader: "pug-loader",
+              options: {
+                pretty: true,
+                root: path.resolve(__dirname, "src")
+              }
+            }
+          ]
         }
       ]
     },
@@ -175,7 +186,7 @@ module.exports = (env, argv) => {
       ...(() => {
         let HtmlWebpackPluginArray = [];
 
-        glob
+        glob.glob
           .globSync("**/*.html", {
             ignore: "**/_*/*.html",
             cwd: paths.src.html
@@ -185,6 +196,30 @@ module.exports = (env, argv) => {
               new HtmlWebpackPlugin({
                 filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), fileName),
                 template: path.resolve(paths.src.html, "./" + fileName),
+                inject: false,
+                minify: isDevMode ? false : true
+              })
+            );
+          });
+
+        return HtmlWebpackPluginArray;
+      })(),
+
+      ...(() => {
+        let HtmlWebpackPluginArray = [];
+
+        glob.glob
+          .globSync("**/*.pug", {
+            ignore: "**/_*/*.pug",
+            cwd: paths.src.pug
+          })
+          .forEach((fileName) => {
+            HtmlWebpackPluginArray.push(
+              new HtmlWebpackPlugin({
+                filename: path
+                  .join(path.relative(paths.dist.common.js, paths.dist.root), fileName)
+                  .replace(".pug", ".html"),
+                template: path.resolve(paths.src.pug, "./" + fileName),
                 inject: false,
                 minify: isDevMode ? false : true
               })
