@@ -75,7 +75,7 @@ module.exports = (env, argv) => {
     // @see https://webpack.js.org/configuration/output/
     output: {
       path: paths.dist.common.js,
-      filename: "common.js"
+      filename: "[name].js"
     },
 
     // モジュールの解決方法
@@ -111,7 +111,7 @@ module.exports = (env, argv) => {
 
     // ローカルサーバー構成
     devServer: {
-      host: "local-ip", // "localhost" | "local-ip"
+      host: "localhost", // "localhost" | "local-ip"
       // port: "3030", // NOTE: 指定しなければ自動
       static: {
         directory: paths.dist.root
@@ -183,51 +183,54 @@ module.exports = (env, argv) => {
         )
       }),
 
-      ...(() => {
-        let HtmlWebpackPluginArray = [];
-
-        glob.glob
-          .globSync("**/*.html", {
+      // 静的HTML/PUGをビルド
+      ...((generateHtmlWebpackPlugin) => {
+        return [
+          ...generateHtmlWebpackPlugin({
+            globPath: "**/*.html",
             ignore: "**/_*/*.html",
-            cwd: paths.src.html
-          })
-          .forEach((fileName) => {
-            HtmlWebpackPluginArray.push(
-              new HtmlWebpackPlugin({
-                filename: path.join(path.relative(paths.dist.common.js, paths.dist.root), fileName),
-                template: path.resolve(paths.src.html, "./" + fileName),
-                inject: false,
-                minify: isDevMode ? false : true
-              })
-            );
-          });
+            targetDir: paths.src.html
+          }),
 
-        return HtmlWebpackPluginArray;
-      })(),
-
-      ...(() => {
-        let HtmlWebpackPluginArray = [];
-
-        glob.glob
-          .globSync("**/*.pug", {
+          ...generateHtmlWebpackPlugin({
+            globPath: "**/*.pug",
             ignore: "**/_*/*.pug",
-            cwd: paths.src.pug
+            targetDir: paths.src.pug,
+            isPug: true
           })
-          .forEach((fileName) => {
-            HtmlWebpackPluginArray.push(
-              new HtmlWebpackPlugin({
-                filename: path
-                  .join(path.relative(paths.dist.common.js, paths.dist.root), fileName)
-                  .replace(".pug", ".html"),
-                template: path.resolve(paths.src.pug, "./" + fileName),
-                inject: false,
-                minify: isDevMode ? false : true
-              })
-            );
-          });
+        ];
+      })((config) => {
+        let htmlWebpackPluginArray = [];
+        let globFiles = glob.globSync(config.globPath, {
+          ignore: config.ignore,
+          cwd: config.targetDir
+        });
 
-        return HtmlWebpackPluginArray;
-      })()
+        for (let i = 0; i < globFiles.length; i++) {
+          htmlWebpackPluginArray.push(
+            new HtmlWebpackPlugin({
+              filename: () => {
+                let relativeFileName = path.join(
+                  path.relative(paths.dist.common.js, paths.dist.root),
+                  globFiles[i]
+                );
+
+                // NOTE: PUGの場合は拡張子をHTMLに変換する
+                if (config.isPug) {
+                  return relativeFileName.replace(".pug", ".html");
+                }
+
+                return relativeFileName;
+              },
+              template: path.resolve(config.targetDir, "./" + globFiles[i]),
+              inject: false,
+              minify: isDevMode ? false : true
+            })
+          );
+        }
+
+        return htmlWebpackPluginArray;
+      })
     ]
   };
 };
