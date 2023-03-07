@@ -22,6 +22,7 @@
  *   - 画像ファイルを圧縮したい
  */
 const path = require("path");
+const { execSync } = require("child_process");
 // @see https://www.npmjs.com/package/sass
 const DartSass = require("sass");
 // @see https://webpack.js.org/plugins/mini-css-extract-plugin/
@@ -64,6 +65,7 @@ module.exports = (env, argv) => {
     // @see https://webpack.js.org/configuration/target/
     // @example ["node"] | ["webworker"]
     target: ["web", "es5"],
+    devtool: isDevMode ? "inline-source-map" : false,
 
     // エントリーポイント
     entry: {
@@ -180,10 +182,7 @@ module.exports = (env, argv) => {
       new MiniCssExtractPlugin({
         // output.path からの相対パスで記述する必要がある
         // [name]はエントリーポイントのkey値
-        filename: path.join(
-          path.relative(paths.dist.common.js, paths.dist.common.css),
-          "/[name].css"
-        )
+        filename: path.join(path.relative(paths.dist.common.js, paths.dist.common.css), "/[name].css")
       }),
 
       // 静的HTML/PUGをビルド
@@ -213,10 +212,7 @@ module.exports = (env, argv) => {
           htmlWebpackPluginArray.push(
             new HtmlWebpackPlugin({
               filename: () => {
-                let relativeFileName = path.join(
-                  path.relative(paths.dist.common.js, paths.dist.root),
-                  globFiles[i]
-                );
+                let relativeFileName = path.join(path.relative(paths.dist.common.js, paths.dist.root), globFiles[i]);
 
                 // NOTE: PUGの場合は拡張子をHTMLに変換する
                 if (config.isPug) {
@@ -233,7 +229,27 @@ module.exports = (env, argv) => {
         }
 
         return htmlWebpackPluginArray;
-      })
+      }),
+
+      // NOTE: コンパイラフック用にプラグインを作成し、コンパイル時にPrettierを起動する
+      // ※ファイル数が多くなると毎回のビルドが遅くなる点に注意
+      new (class CompilerHooksWatchRun {
+        processPrettier() {
+            console.log("Prettier format start.");
+            execSync("npx prettier --write ./src/.");
+            console.log("Prettier format end.");
+        }
+
+        apply(compiler) {
+          compiler.hooks.beforeCompile.tap("CompilerHooksWatchRun", () => {
+            this.processPrettier();
+          });
+
+          compiler.hooks.watchRun.tapPromise("CompilerHooksWatchRun", async (compilation) => {
+            this.processPrettier();
+          });
+        }
+      })()
     ]
   };
 };

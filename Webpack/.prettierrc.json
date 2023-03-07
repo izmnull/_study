@@ -1,0 +1,35 @@
+{
+    "printWidth": 1024,
+    "tabWidth": 4,
+    "useTabs": false,
+    "semi": true,
+    "singleQuote": false,
+    "trailingComma": "none",
+    "bracketSpacing": true,
+    "bracketSameLine": false,
+    "arrowParens": "always",
+    "proseWrap": "preserve",
+    "htmlWhitespaceSensitivity": "css",
+    "vueIndentScriptAndStyle": true,
+    "singleAttributePerLine": false,
+    "overrides": [
+        {
+            "files": ["*.html", "*.vue", "*.md"],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": ["*.css", "*.scss"],
+            "options": {
+                "tabWidth": 2
+            }
+        },
+        {
+            "files": ["*.ts", "*.js", "*.json", "*.jsonc"],
+            "options": {
+                "tabWidth": 2
+            }
+        }
+    ]
+}
