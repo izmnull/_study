@@ -9,7 +9,6 @@
  *
  * TODO:
  * - JS
- *   - 複数のJSファイルを出力したい
  *   - フレームワークが使用できない
  *   - TypeScriptが使用できない
  * - CSS
@@ -68,7 +67,11 @@ module.exports = (env, argv) => {
 
     // エントリーポイント
     entry: {
-      common: path.resolve(paths.src.script, "./common.js")
+      common: path.resolve(paths.src.script, "./common.js"),
+      // 上記commonのようなkey値であればそのままcommon.jsとして出力する（outputの[name]に相当）
+      // key値をパスに指定することで特定のディレクトリに出力もできる
+      // CSSも合わせて読み込んでいる（CSSの出力もこの位置からの相対パスになる点に注意）
+      "../../unique/p-unique": path.resolve(paths.src.script, "./p-unique.js")
     },
 
     // 出力する方法と場所
