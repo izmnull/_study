@@ -14,7 +14,6 @@
  * - CSS
  *   - CSSのソートができない
  * - ASSET
- *   - 画像などのアセットファイルが参照できない
  *   - 画像ファイルを圧縮したい
  */
 const path = require("path");
@@ -48,6 +47,7 @@ module.exports = (env, argv) => {
   paths.dist.common.root = path.resolve(paths.dist.root, "./common");
   paths.dist.common.js = path.resolve(paths.dist.common.root, "./js");
   paths.dist.common.css = path.resolve(paths.dist.common.root, "./css");
+  paths.dist.common.img = path.resolve(paths.dist.common.root, "./img");
 
   paths.src = {};
   paths.src.root = path.resolve(__dirname, "../src");
@@ -182,6 +182,18 @@ module.exports = (env, argv) => {
               options: {
                 pretty: true,
                 root: path.resolve(__dirname, "src")
+              }
+            }
+          ]
+        },
+        {
+          test: /\.(png|jpe?g|gif)$/i,
+          use: [
+            {
+              loader: "file-loader",
+              options: {
+                name: "[name].[ext]",
+                outputPath: path.relative(paths.dist.common.js, paths.dist.common.img)
               }
             }
           ]
