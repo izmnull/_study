@@ -14,7 +14,6 @@
  * - CSS
  *   - CSSのソートができない
  * - Webpack
- *   - distディレクトリがクリーン化されない
  *   - ビルドの速度が遅い
  *   - 設定ファイルを移動したい
  * - ASSET
@@ -33,6 +32,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 // @see https://www.npmjs.com/package/glob
 const glob = require("glob");
+// @see https://www.npmjs.com/package/fs-extra
+const FsExtra = require("fs-extra");
 
 /**
  * @param {*} env 環境変数
@@ -56,6 +57,12 @@ module.exports = (env, argv) => {
   paths.src.script = path.resolve(paths.src.root, "./script");
   paths.src.html = path.resolve(paths.src.root, "./html");
   paths.src.pug = path.resolve(paths.src.root, "./pug");
+
+  // NOTE: ビルド前に出力ディレクトリを空にする
+  if (!isDevMode) {
+    FsExtra.emptyDirSync(paths.dist.root);
+    console.log(`LOG: Clear Dist Dir: ${paths.dist.root}`);
+  }
 
   return {
     // 構成オプション: "none" | "development" | "production"
@@ -235,13 +242,13 @@ module.exports = (env, argv) => {
       // ※ファイル数が多くなると毎回のビルドが遅くなる点に注意
       new (class CompilerHooksWatchRun {
         processPrettier() {
-            console.log("Prettier format start.");
-            execSync("npx prettier --write ./src/.");
-            console.log("Prettier format end.");
+          console.log("LOG: Prettier format start.");
+          execSync("npx prettier --write ./src/.");
+          console.log("LOG: Prettier format end.");
         }
 
         apply(compiler) {
-          compiler.hooks.beforeCompile.tap("CompilerHooksWatchRun", () => {
+          compiler.hooks.beforeRun.tap("CompilerHooksWatchRun", () => {
             this.processPrettier();
           });
 
