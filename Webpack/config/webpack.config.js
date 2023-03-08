@@ -13,8 +13,6 @@
  *   - TypeScriptが使用できない
  * - CSS
  *   - CSSのソートができない
- * - Webpack
- *   - ビルドの速度が遅い
  * - ASSET
  *   - 画像などのアセットファイルが参照できない
  *   - 画像ファイルを圧縮したい
@@ -39,7 +37,7 @@ const FsExtra = require("fs-extra");
  * @param {*} argv 引数
  */
 module.exports = (env, argv) => {
-    const isDevMode = argv.mode === "development" ? true : false;
+  const isDevMode = argv.mode === "development" ? true : false;
   const isStaging = !!env.STAGING;
   const isRelease = !!env.RELEASE;
   const paths = {};
@@ -94,6 +92,14 @@ module.exports = (env, argv) => {
       extensions: [".js", ".jsx", ".ts", ".tsx", ".vue", ".svelte", ".pug", ".scss"],
       alias: {
         "~": paths.src.root
+      }
+    },
+
+    // ビルド時のキャッシュ設定
+    cache: {
+      type: "filesystem",
+      buildDependencies: {
+        config: [__filename]
       }
     },
 
