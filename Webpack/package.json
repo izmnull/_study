@@ -4,12 +4,12 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "npx webpack serve --mode=development",
+    "dev": "npx webpack serve --config ./config/webpack.config.js --mode=development",
     "start": "npm run dev",
-    "build": "npx webpack --mode=production",
-    "staging": "npx webpack --mode=production --env STAGING=true",
-    "release": "npx webpack --mode=production --env RELEASE=true",
-    "format": "npx prettier --write ./src/.",
+    "build": "npx webpack --config ./config/webpack.config.js --mode=production",
+    "staging": "npx webpack --config ./config/webpack.config.js --mode=production --env STAGING=true",
+    "release": "npx webpack --config ./config/webpack.config.js --mode=production --env RELEASE=true",
+    "format": "npx prettier --config ./config/.prettierrc.json --write ./src/.",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",

@@ -15,7 +15,6 @@
  *   - CSSのソートができない
  * - Webpack
  *   - ビルドの速度が遅い
- *   - 設定ファイルを移動したい
  * - ASSET
  *   - 画像などのアセットファイルが参照できない
  *   - 画像ファイルを圧縮したい
@@ -40,20 +39,20 @@ const FsExtra = require("fs-extra");
  * @param {*} argv 引数
  */
 module.exports = (env, argv) => {
-  const isDevMode = argv.mode === "development" ? true : false;
+    const isDevMode = argv.mode === "development" ? true : false;
   const isStaging = !!env.STAGING;
   const isRelease = !!env.RELEASE;
   const paths = {};
 
   paths.dist = {};
-  paths.dist.root = path.resolve(__dirname, "./dist");
+  paths.dist.root = path.resolve(__dirname, "../dist");
   paths.dist.common = {};
   paths.dist.common.root = path.resolve(paths.dist.root, "./common");
   paths.dist.common.js = path.resolve(paths.dist.common.root, "./js");
   paths.dist.common.css = path.resolve(paths.dist.common.root, "./css");
 
   paths.src = {};
-  paths.src.root = path.resolve(__dirname, "./src");
+  paths.src.root = path.resolve(__dirname, "../src");
   paths.src.script = path.resolve(paths.src.root, "./script");
   paths.src.html = path.resolve(paths.src.root, "./html");
   paths.src.pug = path.resolve(paths.src.root, "./pug");
@@ -243,7 +242,7 @@ module.exports = (env, argv) => {
       new (class CompilerHooksWatchRun {
         processPrettier() {
           console.log("LOG: Prettier format start.");
-          execSync("npx prettier --write ./src/.");
+          execSync(`npx prettier --config ./config/.prettierrc.json --write ${paths.src.root}`);
           console.log("LOG: Prettier format end.");
         }
 
